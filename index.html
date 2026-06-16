@@ -246,10 +246,10 @@ tr.low td:first-child{border-left:3px solid var(--red)}
     </div>
   </div>
   <div class="tabs">
-    <div class="tab on"  onclick="tab('cad')">📋 Cadastrar</div>
-    <div class="tab"     onclick="tab('lig')">📞 Ligar <span class="badge" id="badge" style="display:none">0</span></div>
-    <div class="tab"     onclick="tab('rel')">📊 Relatório</div>
-    <div class="tab"     onclick="tab('cfg')">⚙️ Config</div>
+    <div class="tab on"  id="tab-cad" onclick="tab('cad')">📋 Cadastrar</div>
+    <div class="tab"     id="tab-lig" onclick="tab('lig')">📞 Ligar <span class="badge" id="badge" style="display:none">0</span></div>
+    <div class="tab"     id="tab-rel" onclick="tab('rel')">📊 Relatório</div>
+    <div class="tab"     id="tab-cfg" onclick="tab('cfg')">⚙️ Config</div>
   </div>
 
   <div class="cnt">
@@ -495,9 +495,11 @@ function delUser(i) {
 // ═══════════════════════════════════════════════
 var TABS=['cad','lig','rel','cfg'];
 function tab(id) {
-  TABS.forEach((t,i)=>{
-    document.getElementById('t-'+t).style.display=t===id?'block':'none';
-    document.querySelectorAll('.tab')[i].classList.toggle('on',t===id);
+  TABS.forEach(function(t){
+    var el = document.getElementById('t-'+t);
+    if(el) el.style.display = t===id ? 'block' : 'none';
+    var tb = document.getElementById('tab-'+t);
+    if(tb) tb.classList.toggle('on', t===id);
   });
   if(id==='lig') carregarLista();
   if(id==='rel') carregarRel();
