@@ -1,0 +1,1062 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Recepção — Dr. Everson</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --petrol: #1B4F72;
+    --petrol-light: #2471A3;
+    --petrol-pale: #EAF2FB;
+    --mint: #1E8449;
+    --mint-light: #A8D5BA;
+    --mint-pale: #EAFAF1;
+    --amber: #D68910;
+    --amber-pale: #FEF9E7;
+    --red: #C0392B;
+    --red-pale: #FDEDEC;
+    --gray-50: #F8FAFC;
+    --gray-100: #F1F5F9;
+    --gray-200: #E2E8F0;
+    --gray-400: #94A3B8;
+    --gray-600: #475569;
+    --gray-800: #1E293B;
+    --white: #FFFFFF;
+    --shadow-sm: 0 1px 3px rgba(0,0,0,0.08);
+    --shadow-md: 0 4px 16px rgba(0,0,0,0.10);
+    --shadow-lg: 0 8px 32px rgba(0,0,0,0.14);
+    --radius: 12px;
+    --radius-sm: 8px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Inter', sans-serif; background: var(--gray-100); color: var(--gray-800); min-height: 100vh; }
+
+  /* ── LOGIN ── */
+  #tela-login {
+    min-height: 100vh;
+    display: flex; align-items: center; justify-content: center;
+    background: linear-gradient(135deg, #1B4F72 0%, #154360 100%);
+    padding: 24px;
+  }
+  .login-box {
+    background: var(--white);
+    border-radius: 16px;
+    padding: 36px 28px;
+    width: 100%; max-width: 360px;
+    box-shadow: var(--shadow-lg);
+  }
+  .login-logo {
+    text-align: center; margin-bottom: 28px;
+  }
+  .login-logo .logo-icon {
+    width: 56px; height: 56px; border-radius: 14px;
+    background: var(--petrol-pale);
+    display: inline-flex; align-items: center; justify-content: center;
+    font-size: 26px; margin-bottom: 12px;
+  }
+  .login-logo h1 { font-size: 17px; font-weight: 700; color: var(--petrol); }
+  .login-logo p  { font-size: 12px; color: var(--gray-400); margin-top: 3px; }
+  .login-field { margin-bottom: 14px; }
+  .login-field label { display: block; font-size: 12px; font-weight: 600; color: var(--gray-600); margin-bottom: 6px; }
+  .login-field input {
+    width: 100%; padding: 12px 14px;
+    border: 1.5px solid var(--gray-200); border-radius: var(--radius-sm);
+    font-family: 'Inter', sans-serif; font-size: 15px; outline: none;
+    background: var(--gray-50); color: var(--gray-800);
+    transition: border-color 0.15s, box-shadow 0.15s;
+  }
+  .login-field input:focus {
+    border-color: var(--petrol-light);
+    box-shadow: 0 0 0 3px rgba(36,113,163,0.12);
+    background: var(--white);
+  }
+  .login-erro {
+    background: var(--red-pale); color: var(--red);
+    border-radius: var(--radius-sm); padding: 10px 14px;
+    font-size: 13px; font-weight: 500; margin-bottom: 14px; display: none;
+  }
+  .btn-login {
+    width: 100%; padding: 13px;
+    background: var(--petrol); color: var(--white);
+    border: none; border-radius: var(--radius-sm);
+    font-family: 'Inter', sans-serif; font-size: 15px; font-weight: 600;
+    cursor: pointer; transition: background 0.15s;
+  }
+  .btn-login:hover { background: var(--petrol-light); }
+  .btn-login:active { transform: scale(0.98); }
+  .login-footer { text-align: center; margin-top: 20px; font-size: 11px; color: var(--gray-400); }
+
+  /* ── APP (escondido até login) ── */
+  #app { display: none; }
+
+  /* HEADER */
+  .header {
+    background: var(--petrol); padding: 0 16px;
+    display: flex; align-items: center; justify-content: space-between;
+    height: 56px; position: sticky; top: 0; z-index: 100; box-shadow: var(--shadow-md);
+  }
+  .header-left .header-title { color: var(--white); font-size: 15px; font-weight: 600; }
+  .header-left .header-sub   { color: rgba(255,255,255,0.55); font-size: 11px; }
+  .header-right { display: flex; align-items: center; gap: 10px; }
+  .header-user  { color: rgba(255,255,255,0.8); font-size: 12px; font-weight: 500; }
+  .btn-logout {
+    background: rgba(255,255,255,0.15); color: var(--white);
+    border: none; border-radius: 6px; padding: 6px 10px;
+    font-size: 11px; font-weight: 600; cursor: pointer;
+    font-family: 'Inter', sans-serif;
+  }
+  .btn-logout:hover { background: rgba(255,255,255,0.25); }
+
+  /* TABS */
+  .tabs {
+    display: flex; background: var(--white);
+    border-bottom: 2px solid var(--gray-200);
+    position: sticky; top: 56px; z-index: 99;
+  }
+  .tab {
+    flex: 1; padding: 13px 4px; text-align: center;
+    font-size: 12px; font-weight: 500; color: var(--gray-400);
+    cursor: pointer; border-bottom: 3px solid transparent;
+    margin-bottom: -2px; transition: all 0.2s; user-select: none;
+  }
+  .tab.active { color: var(--petrol); border-bottom-color: var(--petrol); }
+  .tab-badge {
+    display: inline-flex; align-items: center; justify-content: center;
+    background: var(--amber); color: var(--white);
+    font-size: 10px; font-weight: 700; width: 17px; height: 17px;
+    border-radius: 50%; margin-left: 4px; vertical-align: middle;
+  }
+
+  /* CONTENT */
+  .content { padding: 20px 16px 100px; max-width: 620px; margin: 0 auto; }
+
+  /* SECTION LABEL */
+  .section-label {
+    font-size: 11px; font-weight: 600; text-transform: uppercase;
+    letter-spacing: 0.8px; color: var(--gray-400);
+    margin-bottom: 10px; margin-top: 24px;
+  }
+  .section-label:first-child { margin-top: 0; }
+
+  /* CARD */
+  .card { background: var(--white); border-radius: var(--radius); box-shadow: var(--shadow-sm); padding: 20px; margin-bottom: 12px; }
+
+  /* FORM */
+  .form-group { margin-bottom: 16px; }
+  .form-group:last-child { margin-bottom: 0; }
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px; }
+  label { display: block; font-size: 12px; font-weight: 600; color: var(--gray-600); margin-bottom: 6px; }
+  input[type="text"], input[type="tel"], input[type="date"], input[type="password"], select, textarea {
+    width: 100%; padding: 11px 14px;
+    border: 1.5px solid var(--gray-200); border-radius: var(--radius-sm);
+    font-family: 'Inter', sans-serif; font-size: 15px; color: var(--gray-800);
+    background: var(--gray-50); transition: border-color 0.15s, box-shadow 0.15s;
+    outline: none; -webkit-appearance: none;
+  }
+  input:focus, select:focus, textarea:focus {
+    border-color: var(--petrol-light);
+    box-shadow: 0 0 0 3px rgba(36,113,163,0.12);
+    background: var(--white);
+  }
+  textarea { resize: vertical; min-height: 72px; }
+  select { cursor: pointer; }
+  .field-readonly {
+    width: 100%; padding: 11px 14px;
+    border: 1.5px solid var(--gray-200); border-radius: var(--radius-sm);
+    font-family: 'Inter', sans-serif; font-size: 15px;
+    background: var(--gray-100); color: var(--gray-600);
+    font-weight: 500;
+  }
+
+  /* BUTTONS */
+  .btn {
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    width: 100%; padding: 14px; border-radius: var(--radius-sm);
+    font-family: 'Inter', sans-serif; font-size: 15px; font-weight: 600;
+    border: none; cursor: pointer; transition: all 0.15s; user-select: none;
+  }
+  .btn:active { transform: scale(0.98); }
+  .btn-primary { background: var(--petrol); color: var(--white); }
+  .btn-primary:hover { background: var(--petrol-light); }
+  .btn-success { background: var(--mint); color: var(--white); }
+  .btn-outline { background: transparent; color: var(--petrol); border: 1.5px solid var(--petrol); }
+  .btn-gray    { background: var(--gray-200); color: var(--gray-600); }
+  .btn-sm      { padding: 9px 16px; font-size: 13px; width: auto; }
+  .btn-row     { display: flex; gap: 8px; margin-top: 16px; }
+  .btn-row .btn { flex: 1; }
+
+  /* TOAST */
+  .toast {
+    position: fixed; bottom: 24px; left: 50%;
+    transform: translateX(-50%) translateY(80px);
+    background: var(--gray-800); color: var(--white);
+    padding: 12px 24px; border-radius: 100px;
+    font-size: 14px; font-weight: 500; z-index: 9999;
+    transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    white-space: nowrap; box-shadow: var(--shadow-lg);
+  }
+  .toast.show { transform: translateX(-50%) translateY(0); }
+  .toast.success { background: var(--mint); }
+  .toast.error   { background: var(--red); }
+
+  /* PATIENT CARD */
+  .patient-card {
+    background: var(--white); border-radius: var(--radius);
+    box-shadow: var(--shadow-sm); margin-bottom: 10px;
+    overflow: hidden; border-left: 4px solid var(--gray-200);
+  }
+  .patient-card.status-pendente    { border-left-color: var(--amber); }
+  .patient-card.status-realizada   { border-left-color: var(--mint); }
+  .patient-card.status-nao-atendeu { border-left-color: var(--gray-400); }
+  .patient-card-header {
+    padding: 14px 16px; display: flex; align-items: center;
+    gap: 12px; cursor: pointer; user-select: none;
+  }
+  .patient-avatar {
+    width: 40px; height: 40px; border-radius: 50%;
+    background: var(--petrol-pale); color: var(--petrol);
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 700; font-size: 16px; flex-shrink: 0;
+  }
+  .patient-info { flex: 1; min-width: 0; }
+  .patient-name { font-size: 15px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .patient-meta { font-size: 12px; color: var(--gray-400); margin-top: 2px; }
+  .status-badge { font-size: 11px; font-weight: 600; padding: 4px 10px; border-radius: 100px; flex-shrink: 0; }
+  .status-badge.pendente    { background: var(--amber-pale); color: var(--amber); }
+  .status-badge.realizada   { background: var(--mint-pale);  color: var(--mint); }
+  .status-badge.nao-atendeu { background: var(--gray-100);   color: var(--gray-400); }
+
+  /* ROTEIRO */
+  .roteiro { display: none; padding: 0 16px 16px; border-top: 1px solid var(--gray-100); }
+  .roteiro.open { display: block; }
+  .roteiro-intro {
+    background: var(--petrol-pale); border-radius: var(--radius-sm);
+    padding: 12px 14px; font-size: 13px; color: var(--petrol);
+    margin: 12px 0; line-height: 1.6;
+  }
+  .roteiro-intro strong { display: block; margin-bottom: 4px; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; }
+
+  /* PERGUNTAS */
+  .pergunta { margin-bottom: 18px; }
+  .pergunta-label {
+    font-size: 13px; font-weight: 600; color: var(--gray-600);
+    margin-bottom: 10px; display: flex; gap: 8px; align-items: flex-start; line-height: 1.4;
+  }
+  .pergunta-num {
+    background: var(--petrol); color: var(--white);
+    width: 20px; height: 20px; border-radius: 50%;
+    display: inline-flex; align-items: center; justify-content: center;
+    font-size: 11px; font-weight: 700; flex-shrink: 0; margin-top: 1px;
+  }
+
+  /* ESCALA 1-10 */
+  .scale-row { display: flex; gap: 4px; }
+  .scale-btn {
+    flex: 1; height: 38px; border-radius: 6px;
+    border: 1.5px solid var(--gray-200); background: var(--gray-50);
+    font-size: 12px; font-weight: 700; color: var(--gray-400);
+    cursor: pointer; transition: all 0.12s;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .scale-btn.selected { background: var(--petrol); border-color: var(--petrol); color: var(--white); }
+  .scale-labels { display: flex; justify-content: space-between; margin-top: 4px; }
+  .scale-labels span { font-size: 10px; color: var(--gray-400); }
+
+  /* SIM/NÃO */
+  .yn-row { display: flex; gap: 8px; }
+  .yn-btn {
+    flex: 1; padding: 10px; border-radius: var(--radius-sm);
+    border: 1.5px solid var(--gray-200); background: var(--gray-50);
+    font-size: 13px; font-weight: 600; color: var(--gray-600);
+    cursor: pointer; text-align: center; transition: all 0.12s;
+  }
+  .yn-btn.selected { background: var(--petrol-pale); border-color: var(--petrol-light); color: var(--petrol); }
+
+  .divider { height: 1px; background: var(--gray-100); margin: 16px 0; }
+
+  .google-link-box {
+    background: var(--mint-pale); border: 1.5px solid var(--mint-light);
+    border-radius: var(--radius-sm); padding: 12px 14px; margin-top: 14px;
+  }
+  .google-link-box p { font-size: 13px; color: var(--mint); font-weight: 500; margin-bottom: 8px; }
+  .copy-link-btn {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: var(--mint); color: var(--white); border: none;
+    border-radius: 6px; padding: 8px 14px; font-size: 13px; font-weight: 600;
+    cursor: pointer; font-family: 'Inter', sans-serif;
+  }
+
+  /* RELATÓRIO */
+  .rel-filters { display: flex; gap: 8px; margin-bottom: 14px; flex-wrap: wrap; }
+  .rel-filters input, .rel-filters select { font-size: 13px; padding: 8px 12px; flex: 1; min-width: 120px; }
+  .rel-summary { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px,1fr)); gap: 8px; margin-bottom: 16px; }
+  .rel-metric { background: var(--white); border-radius: var(--radius-sm); padding: 12px 14px; box-shadow: var(--shadow-sm); }
+  .rel-metric-val   { font-size: 22px; font-weight: 700; color: var(--petrol); }
+  .rel-metric-label { font-size: 11px; color: var(--gray-400); margin-top: 2px; line-height: 1.3; }
+  .rel-table-wrap   { overflow-x: auto; border-radius: var(--radius-sm); box-shadow: var(--shadow-sm); }
+  table { width: 100%; border-collapse: collapse; background: var(--white); font-size: 12px; min-width: 800px; }
+  th {
+    background: var(--petrol); color: var(--white);
+    padding: 10px 12px; text-align: left; font-weight: 600;
+    font-size: 11px; text-transform: uppercase; letter-spacing: 0.4px; white-space: nowrap;
+  }
+  td { padding: 10px 12px; border-bottom: 1px solid var(--gray-100); vertical-align: middle; }
+  tr:last-child td { border-bottom: none; }
+  tr.flag-low td { background: #FFF5F5; }
+  tr.flag-low td:first-child { border-left: 3px solid var(--red); }
+  .nota-cell {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 26px; height: 26px; border-radius: 6px; font-weight: 700; font-size: 12px;
+  }
+  .nota-cell.low  { background: #FDEDEC; color: var(--red); }
+  .nota-cell.mid  { background: #FEF9E7; color: var(--amber); }
+  .nota-cell.high { background: var(--mint-pale); color: var(--mint); }
+  .contato-sim { color: var(--mint); font-weight: 600; }
+  .contato-nao { color: var(--gray-400); font-weight: 600; }
+
+  /* CONFIG */
+  .config-note {
+    background: var(--amber-pale); border: 1.5px solid #F9E79F;
+    border-radius: var(--radius-sm); padding: 14px;
+    font-size: 13px; color: #7D6608; line-height: 1.5; margin-bottom: 16px;
+  }
+  .config-note strong { display: block; margin-bottom: 4px; }
+  .usuarios-lista { margin-top: 12px; }
+  .usuario-item {
+    display: flex; align-items: center; gap: 10px;
+    padding: 10px 0; border-bottom: 1px solid var(--gray-100);
+  }
+  .usuario-item:last-child { border-bottom: none; }
+  .usuario-nome { flex: 1; font-size: 14px; font-weight: 500; }
+  .usuario-role { font-size: 11px; color: var(--gray-400); background: var(--gray-100); padding: 3px 8px; border-radius: 100px; }
+  .btn-del { background: none; border: none; color: var(--red); font-size: 16px; cursor: pointer; padding: 4px; }
+
+  /* MISC */
+  .empty-state { text-align: center; padding: 48px 20px; color: var(--gray-400); }
+  .empty-state .empty-icon { font-size: 48px; margin-bottom: 12px; }
+  .empty-state p { font-size: 14px; }
+  .spinner {
+    display: inline-block; width: 16px; height: 16px;
+    border: 2px solid rgba(255,255,255,0.4); border-top-color: white;
+    border-radius: 50%; animation: spin 0.7s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .tag-novo    { background: var(--petrol-pale); color: var(--petrol); font-size: 10px; font-weight: 700; padding: 2px 7px; border-radius: 100px; margin-left: 6px; }
+  .tag-retorno { background: var(--mint-pale); color: var(--mint); font-size: 10px; font-weight: 700; padding: 2px 7px; border-radius: 100px; margin-left: 6px; }
+  .sessao-info { font-size: 11px; color: var(--gray-400); margin-top: 8px; text-align: center; }
+</style>
+</head>
+<body>
+
+<!-- ══ TELA DE LOGIN ══ -->
+<div id="tela-login">
+  <div class="login-box">
+    <div class="login-logo">
+      <div class="logo-icon">🔬</div>
+      <h1>Dr. Everson — Austin</h1>
+      <p>Recepção & Pesquisa de Satisfação</p>
+    </div>
+    <div class="login-erro" id="login-erro">Usuário ou senha incorretos.</div>
+    <div class="login-field">
+      <label>Usuário</label>
+      <input type="text" id="login-user" placeholder="Seu nome de usuário" autocomplete="username" autocapitalize="none">
+    </div>
+    <div class="login-field">
+      <label>Senha</label>
+      <input type="password" id="login-pass" placeholder="••••••••" autocomplete="current-password"
+        onkeydown="if(event.key==='Enter') fazerLogin()">
+    </div>
+    <button class="btn-login" onclick="fazerLogin()" id="btn-login-submit">Entrar</button>
+    <div class="sessao-info">Sessão expira após 8 horas</div>
+    <div class="login-footer">Laboratório Dr. Everson · Unidade Austin</div>
+  </div>
+</div>
+
+<!-- ══ APP ══ -->
+<div id="app">
+  <div class="header">
+    <div class="header-left">
+      <div class="header-title">Dr. Everson — Austin</div>
+      <div class="header-sub" id="header-sub">Recepção</div>
+    </div>
+    <div class="header-right">
+      <span class="header-user" id="header-user"></span>
+      <button class="btn-logout" onclick="fazerLogout()">Sair</button>
+    </div>
+  </div>
+
+  <div class="tabs">
+    <div class="tab active" onclick="showTab('entrada')">📋 Cadastrar</div>
+    <div class="tab" onclick="showTab('ligacoes')">📞 Ligar <span class="tab-badge" id="badgePendente" style="display:none">0</span></div>
+    <div class="tab" onclick="showTab('relatorio')">📊 Relatório</div>
+    <div class="tab" onclick="showTab('config')">⚙️ Config</div>
+  </div>
+
+  <div class="content">
+
+    <!-- ── ABA ENTRADA ── -->
+    <div id="tab-entrada">
+      <div class="section-label">Novo paciente</div>
+      <div class="card">
+        <div class="form-group">
+          <label>Nome completo *</label>
+          <input type="text" id="inp-nome" placeholder="Ex: Maria Aparecida Silva" autocomplete="off">
+        </div>
+        <div class="form-row">
+          <div>
+            <label>Telefone / WhatsApp *</label>
+            <input type="tel" id="inp-tel" placeholder="(21) 99999-9999">
+          </div>
+          <div>
+            <label>Tipo de atendimento</label>
+            <select id="inp-tipo">
+              <option value="">Selecionar...</option>
+              <option>Exame laboratorial</option>
+              <option>Consulta médica</option>
+              <option>Ultrassom</option>
+              <option>Coleta domiciliar</option>
+              <option>Retorno</option>
+              <option>Outro</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Responsável pelo atendimento na clínica</label>
+          <div class="field-readonly" id="campo-resp-atend">—</div>
+        </div>
+        <div class="form-group">
+          <label>Observações (opcional)</label>
+          <textarea id="inp-obs" placeholder="Ex: Veio acompanhado, tem pressa..."></textarea>
+        </div>
+        <button class="btn btn-primary" onclick="cadastrarPaciente()" id="btn-cadastrar">
+          <span>✓</span> Registrar chegada
+        </button>
+      </div>
+    </div>
+
+    <!-- ── ABA LIGAÇÕES ── -->
+    <div id="tab-ligacoes" style="display:none">
+      <div class="section-label">Pacientes de hoje</div>
+      <div id="lista-pacientes"></div>
+    </div>
+
+    <!-- ── ABA RELATÓRIO ── -->
+    <div id="tab-relatorio" style="display:none">
+      <div class="section-label">Filtros</div>
+      <div class="rel-filters">
+        <input type="date" id="fil-de">
+        <input type="date" id="fil-ate">
+        <input type="text" id="fil-resp" placeholder="Responsável...">
+        <button class="btn btn-primary btn-sm" onclick="renderRelatorio()">Filtrar</button>
+        <button class="btn btn-outline btn-sm" onclick="exportarCSV()">⬇ CSV</button>
+      </div>
+      <div id="rel-summary" class="rel-summary"></div>
+      <div class="section-label">Registros</div>
+      <div class="rel-table-wrap"><div id="rel-tabela"></div></div>
+    </div>
+
+    <!-- ── ABA CONFIG ── -->
+    <div id="tab-config" style="display:none">
+      <div class="section-label">Integração Google Sheets</div>
+      <div class="config-note">
+        <strong>⚠️ Preencha após configurar o Apps Script</strong>
+        Cole a URL gerada na implantação do Apps Script. Feito isso, todos os dados serão enviados automaticamente para a planilha.
+      </div>
+      <div class="card">
+        <div class="form-group">
+          <label>URL do Google Apps Script</label>
+          <input type="text" id="cfg-url" placeholder="https://script.google.com/macros/s/...">
+        </div>
+        <div class="form-group">
+          <label>Link do Google Reviews</label>
+          <input type="text" id="cfg-google" placeholder="https://g.page/r/...">
+        </div>
+        <button class="btn btn-primary btn-sm" style="width:auto;padding:11px 24px" onclick="salvarConfig()">Salvar</button>
+      </div>
+
+      <div id="cfg-admin-panel" style="display:none">
+        <div class="section-label">Usuários do sistema</div>
+        <div class="card">
+          <div class="usuarios-lista" id="lista-usuarios"></div>
+          <div class="divider"></div>
+          <div class="form-row" style="margin-bottom:10px">
+            <div>
+              <label>Usuário</label>
+              <input type="text" id="novo-user" placeholder="Ex: recepcao">
+            </div>
+            <div>
+              <label>Senha</label>
+              <input type="password" id="nova-senha" placeholder="Mínimo 4 caracteres">
+            </div>
+          </div>
+          <div class="form-row" style="margin-bottom:0">
+            <div>
+              <label>Nome completo</label>
+              <input type="text" id="novo-nome" placeholder="Ex: Ana Paula">
+            </div>
+            <div>
+              <label>Perfil</label>
+              <select id="novo-perfil">
+                <option value="recepcao">Recepção</option>
+                <option value="ligacao">Ligações</option>
+                <option value="admin">Administrador</option>
+              </select>
+            </div>
+          </div>
+          <div style="margin-top:14px">
+            <button class="btn btn-primary btn-sm" style="width:auto;padding:11px 24px" onclick="adicionarUsuario()">+ Adicionar usuário</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /content -->
+</div><!-- /app -->
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ═══════════════════════════════════════════════════════════════
+//  AUTENTICAÇÃO
+// ═══════════════════════════════════════════════════════════════
+
+const AUTH_KEY    = 'drEverson_auth';
+const USERS_KEY   = 'drEverson_users';
+const SESSION_MS  = 8 * 60 * 60 * 1000; // 8 horas
+
+// Usuários padrão (na primeira vez que o sistema rodar)
+function getUsuarios() {
+  const saved = localStorage.getItem(USERS_KEY);
+  if (saved) return JSON.parse(saved);
+  // Usuários padrão — TROQUE AS SENHAS após o primeiro acesso
+  const defaults = [
+    { user: 'admin',    senha: 'admin123',   nome: 'Administrador', perfil: 'admin' },
+    { user: 'recepcao', senha: 'recep123',   nome: 'Recepção',      perfil: 'recepcao' },
+    { user: 'ligacao',  senha: 'lig123',     nome: 'Ligações',      perfil: 'ligacao' }
+  ];
+  localStorage.setItem(USERS_KEY, JSON.stringify(defaults));
+  return defaults;
+}
+
+function salvarUsuarios(arr) {
+  localStorage.setItem(USERS_KEY, JSON.stringify(arr));
+}
+
+let sessaoAtual = null;
+
+function verificarSessao() {
+  const raw = localStorage.getItem(AUTH_KEY);
+  if (!raw) return false;
+  const sess = JSON.parse(raw);
+  if (Date.now() - sess.ts > SESSION_MS) {
+    localStorage.removeItem(AUTH_KEY);
+    return false;
+  }
+  sessaoAtual = sess;
+  return true;
+}
+
+function fazerLogin() {
+  const userInput = document.getElementById('login-user').value.trim().toLowerCase();
+  const passInput = document.getElementById('login-pass').value;
+  const usuarios  = getUsuarios();
+  const encontrado = usuarios.find(u => u.user === userInput && u.senha === passInput);
+
+  if (!encontrado) {
+    document.getElementById('login-erro').style.display = 'block';
+    document.getElementById('login-pass').value = '';
+    document.getElementById('login-pass').focus();
+    return;
+  }
+
+  sessaoAtual = { user: encontrado.user, nome: encontrado.nome, perfil: encontrado.perfil, ts: Date.now() };
+  localStorage.setItem(AUTH_KEY, JSON.stringify(sessaoAtual));
+  iniciarApp();
+}
+
+function fazerLogout() {
+  localStorage.removeItem(AUTH_KEY);
+  sessaoAtual = null;
+  document.getElementById('app').style.display = 'none';
+  document.getElementById('tela-login').style.display = 'flex';
+  document.getElementById('login-user').value = '';
+  document.getElementById('login-pass').value = '';
+  document.getElementById('login-erro').style.display = 'none';
+}
+
+function iniciarApp() {
+  document.getElementById('tela-login').style.display = 'none';
+  document.getElementById('app').style.display = 'block';
+  document.getElementById('header-user').textContent = sessaoAtual.nome;
+  document.getElementById('campo-resp-atend').textContent = sessaoAtual.nome;
+
+  // Só admin vê painel de usuários e Config completo
+  if (sessaoAtual.perfil === 'admin') {
+    document.getElementById('cfg-admin-panel').style.display = 'block';
+    renderUsuarios();
+  }
+
+  // Carrega config salva
+  document.getElementById('cfg-url').value    = config.scriptUrl || '';
+  document.getElementById('cfg-google').value = config.googleUrl || '';
+
+  atualizarBadge();
+  showTab('entrada');
+}
+
+// Inicializa ao carregar
+if (verificarSessao()) {
+  iniciarApp();
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  GESTÃO DE USUÁRIOS (admin)
+// ═══════════════════════════════════════════════════════════════
+
+function renderUsuarios() {
+  const lista = getUsuarios();
+  const el = document.getElementById('lista-usuarios');
+  el.innerHTML = lista.map((u, i) => `
+    <div class="usuario-item">
+      <div class="usuario-nome">
+        <strong>${escHtml(u.nome)}</strong>
+        <span style="color:var(--gray-400);font-size:12px;margin-left:6px">@${escHtml(u.user)}</span>
+      </div>
+      <span class="usuario-role">${labelPerfil(u.perfil)}</span>
+      ${u.user !== 'admin' ? `<button class="btn-del" onclick="removerUsuario(${i})" title="Remover">✕</button>` : ''}
+    </div>`).join('');
+}
+
+function labelPerfil(p) {
+  return {admin:'Administrador', recepcao:'Recepção', ligacao:'Ligações'}[p] || p;
+}
+
+function adicionarUsuario() {
+  const user   = document.getElementById('novo-user').value.trim().toLowerCase();
+  const senha  = document.getElementById('nova-senha').value;
+  const nome   = document.getElementById('novo-nome').value.trim();
+  const perfil = document.getElementById('novo-perfil').value;
+
+  if (!user || !senha || !nome) { showToast('Preencha todos os campos','error'); return; }
+  if (senha.length < 4)         { showToast('Senha mínima: 4 caracteres','error'); return; }
+
+  const lista = getUsuarios();
+  if (lista.find(u => u.user === user)) { showToast('Usuário já existe','error'); return; }
+
+  lista.push({ user, senha, nome, perfil });
+  salvarUsuarios(lista);
+  renderUsuarios();
+  ['novo-user','nova-senha','novo-nome'].forEach(id => document.getElementById(id).value = '');
+  showToast('Usuário adicionado!', 'success');
+}
+
+function removerUsuario(i) {
+  const lista = getUsuarios();
+  lista.splice(i, 1);
+  salvarUsuarios(lista);
+  renderUsuarios();
+  showToast('Usuário removido');
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  CONFIG
+// ═══════════════════════════════════════════════════════════════
+
+const CFG_KEY = 'drEverson_cfg';
+let config = JSON.parse(localStorage.getItem(CFG_KEY) || '{"scriptUrl":"","googleUrl":""}');
+
+function salvarConfig() {
+  config.scriptUrl = document.getElementById('cfg-url').value.trim();
+  config.googleUrl = document.getElementById('cfg-google').value.trim();
+  localStorage.setItem(CFG_KEY, JSON.stringify(config));
+  showToast('Configurações salvas!', 'success');
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  DATA / TABS
+// ═══════════════════════════════════════════════════════════════
+
+const hoje    = new Date();
+const dataHoje = hoje.toISOString().slice(0,10);
+
+document.getElementById('fil-de').value  = dataHoje;
+document.getElementById('fil-ate').value = dataHoje;
+
+const TABS = ['entrada','ligacoes','relatorio','config'];
+function showTab(id) {
+  TABS.forEach((t,i) => {
+    document.getElementById('tab-'+t).style.display = t === id ? 'block' : 'none';
+    document.querySelectorAll('.tab')[i].classList.toggle('active', t === id);
+  });
+  if (id === 'ligacoes') renderLista();
+  if (id === 'relatorio') renderRelatorio();
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  MÁSCARA TELEFONE
+// ═══════════════════════════════════════════════════════════════
+
+document.getElementById('inp-tel').addEventListener('input', function(e) {
+  let v = e.target.value.replace(/\D/g,'').slice(0,11);
+  if (v.length <= 10) v = v.replace(/(\d{2})(\d{4})(\d{0,4})/,'($1) $2-$3');
+  else                v = v.replace(/(\d{2})(\d{5})(\d{0,4})/,'($1) $2-$3');
+  e.target.value = v.replace(/-$/,'');
+});
+
+// ═══════════════════════════════════════════════════════════════
+//  STORAGE DE PACIENTES
+// ═══════════════════════════════════════════════════════════════
+
+const STORE_KEY = 'drEverson_pacientes_v2';
+
+function getTodos()       { return JSON.parse(localStorage.getItem(STORE_KEY) || '[]'); }
+function salvarTodos(arr) { localStorage.setItem(STORE_KEY, JSON.stringify(arr)); atualizarBadge(); }
+function getPacientesHoje() { return getTodos().filter(p => p.dataAtend === dataHoje); }
+
+function atualizarBadge() {
+  const n = getPacientesHoje().filter(p => p.status === 'pendente').length;
+  const b = document.getElementById('badgePendente');
+  if (!b) return;
+  b.style.display = n > 0 ? 'inline-flex' : 'none';
+  b.textContent   = n;
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  CADASTRAR PACIENTE
+// ═══════════════════════════════════════════════════════════════
+
+async function cadastrarPaciente() {
+  const nome = document.getElementById('inp-nome').value.trim();
+  const tel  = document.getElementById('inp-tel').value.trim();
+  const tipo = document.getElementById('inp-tipo').value;
+  const obs  = document.getElementById('inp-obs').value.trim();
+  const respAtend = sessaoAtual.nome;
+
+  if (!nome) { showToast('Informe o nome do paciente','error'); return; }
+  if (!tel)  { showToast('Informe o telefone','error'); return; }
+
+  const btn = document.getElementById('btn-cadastrar');
+  btn.innerHTML = '<span class="spinner"></span> Salvando...';
+  btn.disabled  = true;
+
+  const hora = hoje.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
+  const paciente = { id: Date.now(), nome, tel, tipo, obs, respAtend, hora, dataAtend: dataHoje, status: 'pendente', respostas: {} };
+
+  const todos = getTodos();
+  todos.push(paciente);
+  salvarTodos(todos);
+
+  if (config.scriptUrl) {
+    try {
+      await fetch(config.scriptUrl + '?action=cadastrar&' + new URLSearchParams({
+        nome, tel, tipo, obs, respAtend, hora,
+        data: hoje.toLocaleDateString('pt-BR')
+      }), { mode: 'no-cors' });
+    } catch(e) {}
+  }
+
+  ['inp-nome','inp-tel','inp-obs'].forEach(id => document.getElementById(id).value = '');
+  document.getElementById('inp-tipo').value = '';
+  btn.innerHTML = '<span>✓</span> Registrar chegada';
+  btn.disabled  = false;
+  showToast('Paciente registrado! ✓', 'success');
+  document.getElementById('inp-nome').focus();
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  LISTA DE PACIENTES
+// ═══════════════════════════════════════════════════════════════
+
+function renderLista() {
+  const lista = getPacientesHoje();
+  const el    = document.getElementById('lista-pacientes');
+  if (!lista.length) {
+    el.innerHTML = `<div class="empty-state"><div class="empty-icon">📋</div><p>Nenhum paciente registrado hoje.</p></div>`;
+    return;
+  }
+  el.innerHTML = lista.map(p => `
+    <div class="patient-card status-${p.status}" id="card-${p.id}">
+      <div class="patient-card-header" onclick="toggleRoteiro(${p.id})">
+        <div class="patient-avatar">${p.nome.charAt(0).toUpperCase()}</div>
+        <div class="patient-info">
+          <div class="patient-name">${escHtml(p.nome)}
+            ${p.respostas.pacienteRetorno==='Sim' ? '<span class="tag-retorno">Retorno</span>' : ''}
+            ${p.respostas.pacienteRetorno==='Não' ? '<span class="tag-novo">Novo</span>'     : ''}
+          </div>
+          <div class="patient-meta">${escHtml(p.tel)} · ${escHtml(p.tipo||'Atendimento')} · ${p.hora}</div>
+        </div>
+        <span class="status-badge ${p.status}">${labelStatus(p.status)}</span>
+      </div>
+      <div class="roteiro" id="roteiro-${p.id}">${roteiroHTML(p)}</div>
+    </div>`).join('');
+}
+
+function labelStatus(s) {
+  return {pendente:'⏳ Pendente', realizada:'✅ Realizada', 'nao-atendeu':'📵 Não atendeu'}[s] || s;
+}
+
+function toggleRoteiro(id) {
+  document.getElementById('roteiro-'+id).classList.toggle('open');
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  ROTEIRO DE LIGAÇÃO
+// ═══════════════════════════════════════════════════════════════
+
+const PERGUNTAS = [
+  { campo:'expLab',         label:'Como foi a experiência no laboratório?' },
+  { campo:'expRecep',       label:'Como foi o atendimento na recepção?' },
+  { campo:'expColeta',      label:'Como foi a coleta?' },
+  { campo:'expAcolhimento', label:'Sentiu-se acolhido e bem orientado?' },
+  { campo:'expEspera',      label:'O tempo de espera foi adequado?' },
+  { campo:'recomendaria',   label:'Você recomendaria nosso laboratório para outras pessoas?' },
+  { campo:'expLimpeza',     label:'Como avalia a limpeza e organização do ambiente?' },
+  { campo:'expInstrucoes',  label:'As instruções recebidas antes do exame foram claras?' },
+];
+
+function escalaHTML(p, campo, num) {
+  const r = p.respostas || {};
+  return `
+    <div class="pergunta">
+      <div class="pergunta-label"><span class="pergunta-num">${num}</span>${PERGUNTAS[num-1].label}</div>
+      <div class="scale-row">
+        ${[1,2,3,4,5,6,7,8,9,10].map(n =>
+          `<button class="scale-btn${r[campo]==n?' selected':''}" onclick="resp(${p.id},'${campo}',${n})">${n}</button>`
+        ).join('')}
+      </div>
+      <div class="scale-labels"><span>1 — Horrível</span><span>10 — Excelente</span></div>
+    </div>`;
+}
+
+function roteiroHTML(p) {
+  const r       = p.respostas || {};
+  const primeiro = escHtml(p.nome.split(' ')[0]);
+
+  return `
+    <div class="roteiro-intro">
+      <strong>🗣️ Abertura da ligação</strong>
+      "Bom dia/tarde, posso falar com <strong>${primeiro}</strong>? Aqui é ${escHtml(sessaoAtual?.nome||'[nome]')} do Laboratório Dr. Everson, em Austin. Atendemos o(a) Sr(a). hoje e gostaríamos de saber se está tudo bem e se ficou satisfeito(a). Tem um minutinho?"
+    </div>
+
+    <div class="form-group" style="margin-top:12px">
+      <label>Responsável por esta ligação</label>
+      <div class="field-readonly">${escHtml(sessaoAtual?.nome||'')}</div>
+    </div>
+
+    <div class="form-group">
+      <label>O(a) paciente já nos conhecia antes?</label>
+      <div class="yn-row">
+        ${['Sim','Não'].map(op=>`<div class="yn-btn${r.pacienteRetorno===op?' selected':''}" onclick="resp(${p.id},'pacienteRetorno','${op}')">${op}</div>`).join('')}
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    ${PERGUNTAS.slice(0,6).map((pg,i) => escalaHTML(p, pg.campo, i+1)).join('')}
+
+    <div class="pergunta">
+      <div class="pergunta-label"><span class="pergunta-num">6</span>Há algo que poderíamos melhorar?</div>
+      <textarea placeholder="Anote a resposta do paciente..." style="font-size:13px;margin-top:4px"
+        onchange="resp(${p.id},'melhoria',this.value)">${escHtml(r.melhoria||'')}</textarea>
+    </div>
+
+    ${escalaHTML(p, 'recomendaria', 7)}
+    ${escalaHTML(p, 'expLimpeza', 8)}
+    ${escalaHTML(p, 'expInstrucoes', 9)}
+
+    <div class="divider"></div>
+
+    ${config.googleUrl ? `
+    <div class="google-link-box">
+      <p>📲 Ao finalizar, peça avaliação no Google e envie por WhatsApp:</p>
+      <button class="copy-link-btn" onclick="copiarMsg('${primeiro}')">📋 Copiar mensagem</button>
+    </div>` : ''}
+
+    <div class="btn-row">
+      <button class="btn btn-success" onclick="finalizarLigacao(${p.id},'realizada')">✅ Contato realizado</button>
+      <button class="btn btn-gray"    onclick="finalizarLigacao(${p.id},'nao-atendeu')">📵 Não atendeu</button>
+    </div>`;
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  RESPOSTA / FINALIZAR
+// ═══════════════════════════════════════════════════════════════
+
+function resp(id, campo, valor) {
+  const todos = getTodos();
+  const p = todos.find(x => x.id === id);
+  if (!p) return;
+  if (!p.respostas) p.respostas = {};
+  p.respostas[campo] = valor;
+  salvarTodos(todos);
+  const el = document.getElementById('roteiro-'+id);
+  el.innerHTML = roteiroHTML(p);
+  el.classList.add('open');
+}
+
+async function finalizarLigacao(id, novoStatus) {
+  const todos = getTodos();
+  const p = todos.find(x => x.id === id);
+  if (!p) return;
+  p.status           = novoStatus;
+  p.dataLig          = new Date().toLocaleDateString('pt-BR');
+  p.respLig          = sessaoAtual.nome;
+  p.contatoRealizado = novoStatus === 'realizada' ? 'Sim' : 'Não';
+  salvarTodos(todos);
+
+  if (config.scriptUrl) {
+    try {
+      const r = p.respostas || {};
+      await fetch(config.scriptUrl + '?action=pesquisa&' + new URLSearchParams({
+        dataAtend: p.dataAtend, dataLig: p.dataLig,
+        nome: p.nome, tel: p.tel, tipo: p.tipo,
+        respAtend: p.respAtend, respLig: p.respLig,
+        contatoRealizado: p.contatoRealizado,
+        pacienteRetorno: r.pacienteRetorno||'',
+        expLab: r.expLab||'', expRecep: r.expRecep||'',
+        expColeta: r.expColeta||'', expAcolhimento: r.expAcolhimento||'',
+        expEspera: r.expEspera||'', melhoria: r.melhoria||'',
+        recomendaria: r.recomendaria||'',
+        expLimpeza: r.expLimpeza||'', expInstrucoes: r.expInstrucoes||''
+      }), { mode: 'no-cors' });
+    } catch(e) {}
+  }
+
+  showToast(novoStatus === 'realizada' ? 'Pesquisa salva! ✅' : 'Marcado como não atendeu',
+            novoStatus === 'realizada' ? 'success' : '');
+  renderLista();
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  RELATÓRIO
+// ═══════════════════════════════════════════════════════════════
+
+const CAMPOS_NOTAS  = ['expLab','expRecep','expColeta','expAcolhimento','expEspera','recomendaria','expLimpeza','expInstrucoes'];
+const LABELS_NOTAS  = ['Exp. Lab.','Recepção','Coleta','Acolhimento','Espera','Recomenda','Limpeza','Instruções'];
+
+function filtrarDados() {
+  const de   = document.getElementById('fil-de').value;
+  const ate  = document.getElementById('fil-ate').value;
+  const resp = document.getElementById('fil-resp').value.trim().toLowerCase();
+  return getTodos().filter(p => {
+    if (de   && p.dataAtend < de)  return false;
+    if (ate  && p.dataAtend > ate) return false;
+    if (resp && !((p.respAtend||'').toLowerCase().includes(resp) || (p.respLig||'').toLowerCase().includes(resp))) return false;
+    return true;
+  });
+}
+
+function notaClass(n) { return !n ? '' : n <= 4 ? 'low' : n <= 6 ? 'mid' : 'high'; }
+
+function renderRelatorio() {
+  const dados      = filtrarDados();
+  const comContato = dados.filter(p => p.contatoRealizado === 'Sim');
+  const taxa       = dados.length ? Math.round(comContato.length / dados.length * 100) : 0;
+
+  const mediasObj = {};
+  CAMPOS_NOTAS.forEach(c => {
+    const vals = comContato.map(p => Number(p.respostas?.[c])).filter(Boolean);
+    mediasObj[c] = vals.length ? (vals.reduce((a,b)=>a+b,0)/vals.length).toFixed(1) : '—';
+  });
+
+  const mediaGeral = (() => {
+    const all = comContato.flatMap(p => CAMPOS_NOTAS.map(c => Number(p.respostas?.[c])).filter(Boolean));
+    return all.length ? (all.reduce((a,b)=>a+b,0)/all.length).toFixed(1) : '—';
+  })();
+
+  const corMedia = v => {
+    const n = Number(v);
+    return isNaN(n) ? 'var(--gray-400)' : n >= 7 ? 'var(--mint)' : n >= 5 ? 'var(--amber)' : 'var(--red)';
+  };
+
+  document.getElementById('rel-summary').innerHTML = `
+    <div class="rel-metric"><div class="rel-metric-val">${dados.length}</div><div class="rel-metric-label">Pacientes no período</div></div>
+    <div class="rel-metric"><div class="rel-metric-val">${comContato.length}</div><div class="rel-metric-label">Contatos realizados</div></div>
+    <div class="rel-metric"><div class="rel-metric-val">${taxa}%</div><div class="rel-metric-label">Taxa de contato</div></div>
+    <div class="rel-metric"><div class="rel-metric-val" style="color:${corMedia(mediaGeral)}">${mediaGeral}</div><div class="rel-metric-label">Média geral</div></div>
+    ${CAMPOS_NOTAS.map((c,i)=>`<div class="rel-metric">
+      <div class="rel-metric-val" style="font-size:18px;color:${corMedia(mediasObj[c])}">${mediasObj[c]}</div>
+      <div class="rel-metric-label">${LABELS_NOTAS[i]}</div>
+    </div>`).join('')}`;
+
+  const tabEl = document.getElementById('rel-tabela');
+  if (!dados.length) {
+    tabEl.innerHTML = `<div class="empty-state"><div class="empty-icon">📊</div><p>Nenhum registro no período.</p></div>`;
+    return;
+  }
+
+  tabEl.innerHTML = `<table>
+    <thead><tr>
+      <th>Dt. Atend.</th><th>Nome</th><th>Telefone</th><th>Dt. Ligação</th>
+      <th>Resp. Atend.</th><th>Resp. Ligação</th><th>Contato</th>
+      ${LABELS_NOTAS.map(l=>`<th>${l}</th>`).join('')}
+    </tr></thead>
+    <tbody>
+    ${dados.map(p => {
+      const r   = p.respostas || {};
+      const low = CAMPOS_NOTAS.map(c => Number(r[c])).filter(Boolean).some(n => n <= 5);
+      return `<tr class="${low?'flag-low':''}">
+        <td>${p.dataAtend||''}</td>
+        <td><strong>${escHtml(p.nome)}</strong></td>
+        <td>${escHtml(p.tel)}</td>
+        <td>${p.dataLig||'—'}</td>
+        <td>${escHtml(p.respAtend||'')}</td>
+        <td>${escHtml(p.respLig||'—')}</td>
+        <td class="${p.contatoRealizado==='Sim'?'contato-sim':'contato-nao'}">${p.contatoRealizado||'—'}</td>
+        ${CAMPOS_NOTAS.map(c=>`<td><span class="nota-cell ${notaClass(Number(r[c]))}">${r[c]||'—'}</span></td>`).join('')}
+      </tr>`;
+    }).join('')}
+    </tbody></table>`;
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  EXPORTAR CSV
+// ═══════════════════════════════════════════════════════════════
+
+function exportarCSV() {
+  const dados = filtrarDados();
+  const cab   = ['Data Atend.','Nome','Telefone','Data Ligação','Resp. Atend.','Resp. Ligação',
+    'Contato Realizado',...LABELS_NOTAS,'Melhoria (aberta)','Paciente Retorno'];
+  const linhas = dados.map(p => {
+    const r = p.respostas || {};
+    return [p.dataAtend, p.nome, p.tel, p.dataLig||'', p.respAtend, p.respLig||'',
+      p.contatoRealizado||'', ...CAMPOS_NOTAS.map(c=>r[c]||''),
+      (r.melhoria||'').replace(/\n/g,' '), r.pacienteRetorno||''
+    ].map(v=>`"${String(v).replace(/"/g,'""')}"`).join(',');
+  });
+  const csv  = '\uFEFF' + [cab.join(','),...linhas].join('\n');
+  const blob = new Blob([csv],{type:'text/csv;charset=utf-8'});
+  const a    = document.createElement('a');
+  a.href     = URL.createObjectURL(blob);
+  a.download = `satisfacao_drEverson_${dataHoje}.csv`;
+  a.click();
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  WHATSAPP
+// ═══════════════════════════════════════════════════════════════
+
+function copiarMsg(nome) {
+  const msg = `Olá, ${nome}! 😊 Agradecemos sua visita ao Laboratório Dr. Everson. Sua opinião nos ajuda a melhorar sempre! Poderia nos avaliar no Google? Leva menos de 1 minuto: ${config.googleUrl}`;
+  navigator.clipboard.writeText(msg).then(() => showToast('Mensagem copiada! Cole no WhatsApp 📲','success'));
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  UTILITÁRIOS
+// ═══════════════════════════════════════════════════════════════
+
+function showToast(msg, type='') {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.className   = 'toast show' + (type ? ' '+type : '');
+  setTimeout(() => el.classList.remove('show'), 2800);
+}
+
+function escHtml(s) {
+  return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+</script>
+</body>
+</html>
