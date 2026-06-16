@@ -474,38 +474,51 @@ function removerUsuario(i) {
 }
 
 // ═══════════════════════════════════════════════════════════════
-//  API — comunicação com Apps Script
+//  API — comunicação com Apps Script via JSONP (sem bloqueio CORS)
 // ═══════════════════════════════════════════════════════════════
-async function api(params) {
-  if (!config.scriptUrl) { showToast('Configure a URL do Apps Script na aba ⚙️ Config','error'); return null; }
-  setSyncing(true);
-  try {
-    const url = config.scriptUrl + '?' + new URLSearchParams(params);
-    const res = await fetch(url, { mode: 'no-cors' });
-    // no-cors não retorna body — para leitura usamos cors via redirect trick
-    setSyncing(false);
-    return { ok: true };
-  } catch(e) {
-    setSyncing(false);
-    showToast('Erro de conexão. Verifique a internet.','error');
-    return null;
-  }
-}
+let _cbCount = 0;
 
-async function apiLer(params) {
-  if (!config.scriptUrl) { showToast('Configure a URL do Apps Script na aba ⚙️ Config','error'); return null; }
-  setSyncing(true);
-  try {
-    const url = config.scriptUrl + '?' + new URLSearchParams(params);
-    const res = await fetch(url);
-    const data = await res.json();
-    setSyncing(false);
-    return data;
-  } catch(e) {
-    setSyncing(false);
-    showToast('Erro ao carregar dados. Verifique a URL do Apps Script.','error');
-    return null;
-  }
+function apiLer(params) {
+  return new Promise((resolve) => {
+    if (!config.scriptUrl) {
+      showToast('Configure a URL do Apps Script na aba ⚙️ Config','error');
+      resolve(null); return;
+    }
+    setSyncing(true);
+    const cbName = '__cb' + (++_cbCount);
+    const timeout = setTimeout(() => {
+      delete window[cbName];
+      const s = document.getElementById('sc_'+cbName);
+      if (s) s.remove();
+      setSyncing(false);
+      showToast('Tempo esgotado. Verifique a conexão.','error');
+      resolve(null);
+    }, 15000);
+
+    window[cbName] = (data) => {
+      clearTimeout(timeout);
+      delete window[cbName];
+      const s = document.getElementById('sc_'+cbName);
+      if (s) s.remove();
+      setSyncing(false);
+      resolve(data);
+    };
+
+    const p = { ...params, callback: cbName };
+    const url = config.scriptUrl + '?' + new URLSearchParams(p);
+    const script = document.createElement('script');
+    script.id  = 'sc_' + cbName;
+    script.src = url;
+    script.onerror = () => {
+      clearTimeout(timeout);
+      delete window[cbName];
+      script.remove();
+      setSyncing(false);
+      showToast('Erro de conexão. Verifique a internet.','error');
+      resolve(null);
+    };
+    document.head.appendChild(script);
+  });
 }
 
 function setSyncing(v) {
