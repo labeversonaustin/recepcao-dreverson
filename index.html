@@ -493,7 +493,7 @@ function delUser(i) {
 // ═══════════════════════════════════════════════
 //  TABS
 // ═══════════════════════════════════════════════
-const TABS=['cad','lig','rel','cfg'];
+var TABS=['cad','lig','rel','cfg'];
 function tab(id) {
   TABS.forEach((t,i)=>{
     document.getElementById('t-'+t).style.display=t===id?'block':'none';
