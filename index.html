@@ -549,7 +549,7 @@ function gsWrite(params) {
 // ═══════════════════════════════════════════════
 async function gsRead(range) {
   setSyncing(true);
-  const url=`https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${encodeURIComponent(range)}?key=AIzaSyD2bTpDHQEMSO0aOiGXiYT_tA9mYGDv1oY`;
+  const url=`https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${encodeURIComponent(range)}?key=AIzaSyCmwUXRHM4Ppb9rv_4OMc6VWa74CcO7wTM`;
   try {
     const r=await fetch(url);
     const d=await r.json();
