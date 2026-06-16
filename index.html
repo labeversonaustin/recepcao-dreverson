@@ -382,13 +382,22 @@ const CI = {
 // ═══════════════════════════════════════════════
 //  CONFIG
 // ═══════════════════════════════════════════════
-const CFG_KEY = 'drev_cfg';
-let cfg = JSON.parse(localStorage.getItem(CFG_KEY)||'{"scriptUrl":"","googleUrl":""}');
+var CFG_KEY = 'drev_cfg';
+var SCRIPT_URL_PADRAO = 'https://script.google.com/macros/s/AKfycbyDtHFBwA2EStVUQbZHGegAwblYSbAJt-UFwlitRB-YK7m2UvqNFG5Tv7huZSqkRCnWQg/exec';
+var cfg = (function(){
+  try {
+    var r = localStorage.getItem(CFG_KEY);
+    var s = r ? JSON.parse(r) : {};
+    return {scriptUrl: s.scriptUrl||SCRIPT_URL_PADRAO, googleUrl: s.googleUrl||''};
+  } catch(e) {
+    return {scriptUrl: SCRIPT_URL_PADRAO, googleUrl:''};
+  }
+})();
 
 function salvarCfg() {
-  cfg.scriptUrl = document.getElementById('c-url').value.trim();
+  cfg.scriptUrl = document.getElementById('c-url').value.trim() || SCRIPT_URL_PADRAO;
   cfg.googleUrl = document.getElementById('c-goo').value.trim();
-  localStorage.setItem(CFG_KEY, JSON.stringify(cfg));
+  try { localStorage.setItem(CFG_KEY, JSON.stringify(cfg)); } catch(e) {}
   toast('Configurações salvas!','ok');
 }
 
@@ -457,7 +466,9 @@ function startApp() {
   tab('cad');
 }
 
-if (checkSess()) startApp();
+document.addEventListener('DOMContentLoaded', function() {
+  if (checkSess()) startApp();
+});
 
 // ═══════════════════════════════════════════════
 //  USUÁRIOS
@@ -860,17 +871,4 @@ function copiarMsg(nome){
   navigator.clipboard.writeText(msg).then(()=>toast('Mensagem copiada! Cole no WhatsApp 📲','ok'));
 }
 
-// ═══════════════════════════════════════════════
-//  UTILS
-// ═══════════════════════════════════════════════
-function toast(msg,type=''){
-  const el=document.getElementById('toast');
-  el.textContent=msg; el.className='toast on'+(type?' '+type:'');
-  setTimeout(()=>el.classList.remove('on'),2800);
-}
-function esc(s){
-  return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-}
-</script>
-</body>
-</html>
+// ═══════════════════════
